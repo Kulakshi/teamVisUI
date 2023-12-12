@@ -11,11 +11,10 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import AlertPage from "../pages/component/AlertPage";
 import ButtonPage from "../pages/component/ButtonPage";
-import InstallationPage from "../pages/installation/InstallationPage";
 import DocumentationPage from "../pages/documentation/DocumentationPage";
+import {HomeOutlined} from "@mui/icons-material";
 
 const appRoutes: RouteType[] = [
   {
@@ -24,12 +23,12 @@ const appRoutes: RouteType[] = [
     state: "home"
   },
   {
-    path: "/installation",
-    element: <InstallationPage />,
+    path: "/home",
+    element: <HomePage />,
     state: "installation",
     sidebarProps: {
-      displayText: "Installation",
-      icon: <FileDownloadOutlinedIcon />
+      displayText: "Home",
+      icon: <HomeOutlined/>
     }
   },
   {
