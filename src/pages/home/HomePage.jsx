@@ -15,7 +15,7 @@ const HomePage = () => {
         const fetchCsvFiles = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/dashboard/get_files/${user}`);
-                setProjects(response.data.projects);
+                setProjects(response.data);
             } catch (error) {
                 console.error('Error fetching CSV files:', error);
             }
@@ -55,7 +55,7 @@ const HomePage = () => {
     return (
         <>
             <div >
-                <h2>Hello {user && user}</h2>
+                <h2>Hello {user}</h2>
                 <button className="border border-gray-600 p-1 rounded" onClick={()=>{setNewProject(true)}}>Create New Project</button>
                 {
                     newProject &&
@@ -74,7 +74,13 @@ const HomePage = () => {
                                 onClick={()=>{
                                     nav('/app/dashboard', { state: ob });
                                 }}
-                            >{ob.projectName || ob.fileName}</li>
+                            >
+                                <p>{ob.projectName || ob.fileName}</p>
+                                <p>{ob.ownerId == user ? "Owner" : "Collaborator"}</p>
+
+
+
+                            </li>
                         ))}
                     </ul>
                 </div>
