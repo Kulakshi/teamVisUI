@@ -3,6 +3,7 @@ import {LineChart, Line, Bar, BarChart, ResponsiveContainer} from 'recharts';
 import axios from "axios";
 import {useUser} from "../../UserContext";
 import {Checkbox, FormControlLabel} from "@mui/material";
+import { AccessibilityNew, Face, Face2, PendingSharp } from '@mui/icons-material';
 
 
 // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
@@ -39,45 +40,66 @@ const Chart = ({chart, data}) => {
         <div className="basis-1/3 border border-gray-400 my-2 rounded p-5">
             <div className="gap-2 flex flex-row justify-between">
                 {chart && chart.title ?
-                    chart.title :
+                    <div > {chart.title}
+                    <Face/>
+                    </div>
+                        :
                     <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
                 }
                 <div>
-
-                    <FormControlLabel
+                    {
+                        // user == chart.ownerId || user == project.ownerId?
+                        user == chart.ownerId ?
+                        <FormControlLabel
                         control={<Checkbox checked={isLocked} disabled={user != chart.ownerId} onChange={(e) => {
                             setIsLocked(e.target.checked)
                         }}/>}
                         label={isLocked ? 'locked' : 'unlocked'}
-                    />
+                    /> : <div> </div>
+                          
+                    }
+                    
                 </div>
             </div>
             <hr/>
             <div className="">
                 <div className="gap-2 flex flex-row">
-                    <div>
-                        x: <select value={x} onChange={(e) => setX(e.target.value)}>
-                        {columns && columns.map((val) => {
-                            return <option value={val}>{val}</option>
-                        })}
-                    </select>
-                    </div>
-                    <div>
-                        y: <select value={y} onChange={(e) => setY(e.target.value)}>
-                        {columns && columns.map((val) => {
-                            return <option value={val}>{val}</option>
-                        })}
-                    </select>
-                    </div>
+                    {   
+                    // isLocked && user != chart.ownerId && user != project.ownerId?
+                    isLocked && user != chart.ownerId ?
+                            <div> x: {x} y: {y} Chart type: {chartType}
+                            </div>
+                            :
+                            <div>
+                                <div>
+                                x: <select value={x} onChange={(e) => setX(e.target.value)}>
+                                {columns && columns.map((val) => {
+                                    return <option value={val}>{val}</option>
+                                })}
+                                 </select>
+                                
+                                y: <select value={y} onChange={(e) => setY(e.target.value)}>    
+                                {columns && columns.map((val) => {
+                                    return <option value={val}>{val}</option>
+                                }
+                                )}
+                                </select>
+                                </div>
+                                <div>
+                                    Chart type: <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
+                                    {chartTypes && chartTypes.map((val) => {
+                                        return <option value={val}>{val}</option>
+                                    })}
+                                </select>
+                                </div>
+                            </div>
+                            
+                    }
+                   
+                    
                 </div>
 
-                <div>
-                    Chart type: <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
-                    {chartTypes && chartTypes.map((val) => {
-                        return <option value={val}>{val}</option>
-                    })}
-                </select>
-                </div>
+               
             </div>
 
             {
@@ -98,9 +120,14 @@ const Chart = ({chart, data}) => {
                 // </ResponsiveContainer>
             }
 
+            {
+                // isLocked && user != chart.ownerId && user != project.ownerId?
+                isLocked && user != chart.ownerId ?
+                    <div> </div>
+                    :
+                    <button className="border border-gray-600 p-2 rounded" onClick={handleSubmit}>Save</button>
 
-            <button className="border border-gray-600 p-2 rounded" onClick={handleSubmit}>Save</button>
-
+            }
 
         </div>
     );
