@@ -1,78 +1,84 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {useUser} from "../../UserContext";
+import {useNavigate} from "react-router-dom";
 
 const HomePage = () => {
-    const [userId, setUserId] = useState('user1');
+    const {user} = useUser();
+    console.log(user)
+    const [newProject, setNewProject] = useState(false);
+    const [projectName, setProjectName] = useState('');
     const [csvFile, setCsvFile] = useState(null);
-    const [csvFiles, setCsvFiles] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const nav = useNavigate()
 
-    useEffect(() => {
         const fetchCsvFiles = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/dashboard/get_files/${userId}`);
-                setCsvFiles(response.data.csvFiles);
+                const response = await axios.get(`http://localhost:3000/api/dashboard/get_files/${user}`);
+                setProjects(response.data.projects);
             } catch (error) {
                 console.error('Error fetching CSV files:', error);
             }
         };
 
+    useEffect(() => {
         fetchCsvFiles();
-        const fetchCsvFile = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3000/api/dashboard/get_file`,
-                    {params: {userId: userId, fileId: "65788c6275707a0d04fb390f"}}); //65789161fb2041c975d8176e
-                console.log(response)
-                // setCsvFiles(response.data.csvFiles);
-                //65788c6275707a0d04fb390f
-            } catch (error) {
-                console.error('Error fetching CSV files:', error);
-            }
-        };
-
-        fetchCsvFile();
-    }, [userId]);
+    }, [user]);
 
     const handleFileChange = (e) => {
         setCsvFile(e.target.files[0]);
     };
 
-    const handleUserIdChange = (e) => {
-        setUserId(e.target.value);
+    const handleProjectChange = (e) => {
+        setProjectName(e.target.value);
     };
 
     const handleSubmit = async () => {
         const formData = new FormData();
-        formData.append('userId', userId);
+        formData.append('userId', user);
+        formData.append('name', projectName);
         formData.append('csvFile', csvFile);
 
         try {
-            const response = await axios.post('http://localhost:3000/api/dashboard/upload_csv', formData, {
+            const response = await axios.post('http://localhost:3000/api/dashboard/new_project', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-            });
+            }).then(()=>fetchCsvFiles());
             console.log(response.data);
         } catch (error) {
             console.error('Error uploading file:', error);
         }
     };
 
+
     return (
         <>
-            <div>
+            <div >
+                <h2>Hello {user && user}</h2>
+                <button className="border border-gray-600 p-1 rounded" onClick={()=>{setNewProject(true)}}>Create New Project</button>
+                {
+                    newProject &&
+                    <div className="flex flex-col w-1/2 p-5 border-1">
+                        <h2>Create New Project</h2>
+                        <input type="text" placeholder="Project Name" onChange={handleProjectChange}/>
+                        <input type="file" accept=".csv" onChange={handleFileChange}/>
+                        <button className="border border-gray-600 p-1 rounded" onClick={handleSubmit}>Create</button>
+                    </div>
+                }
                 <div>
-                    <input type="text" placeholder="User ID" onChange={handleUserIdChange}/>
-                    <input type="file" onChange={handleFileChange}/>
-                    <button onClick={handleSubmit}>Upload File</button>
-                </div>
-                <div>
-                    <h2>CSV Files for User ID: {userId}</h2>
+                    <h2 className="text-lg font-bold">Projects</h2>
                     <ul>
-                        {csvFiles.map((fileName, index) => (
-                            <li key={index}>{fileName}</li>
+                        {projects && projects.map((ob, index) => (
+                            <li key={index} className="p-5 border border-1"
+                                onClick={()=>{
+                                    nav('/app/dashboard', { state: ob });
+                                }}
+                            >{ob.projectName || ob.fileName}</li>
                         ))}
                     </ul>
                 </div>
+
             </div>
 
         </>
