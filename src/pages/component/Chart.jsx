@@ -25,12 +25,17 @@ const Chart = ({chart, data}) => {
     const {user} = useUser()
     const {ychartsmap, doc} = useYjs()
 
-    const ychart = doc.getMap(chart._id);
-    ychart.set(chart._id, chart)
-    ychart.observeDeep(()=>{
-        console.log("size",ychart.size)
-        console.log("get",ychart.get(chart._id))
-    })
+    let ychart;
+    if (chart._id) {
+        ychart = doc.getMap(chart._id);
+        if (ychart && chart) {
+            ychart.set(chart._id, chart)
+            ychart.observeDeep(() => {
+                console.log("size", ychart.size)
+                console.log("get", ychart.get(chart._id))
+            })
+        }
+    }
     const location = useLocation()
     const columns = Object.keys(data[0])
     const chartTypes = ["Bar", "Line"]
