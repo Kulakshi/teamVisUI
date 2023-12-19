@@ -5,9 +5,12 @@ import {useLocation} from "react-router-dom";
 import {useUser} from "../../UserContext";
 import Select from 'react-select'
 import AsyncSelect from "react-select/async";
+import {useYjs} from "../../YjsContext";
+import ChartsGrid from "../../components/common/ChartsGrid";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
+    const {yarray} = useYjs()
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const [charts, setCharts] = useState([]);
     const [users, setUsers] = useState([]);
@@ -18,7 +21,7 @@ const DefaultPage = (props) => {
         console.log(location.state)
         const loadUsers = async () => {
             try {
-                axios.get(`http://localhost:3000/api/users/all`).then((response) => {
+                axios.get(`http://localhost:3000/api/users/all/${user}`).then((response) => {
                     const options = response.data?.users.map((item) => {
                        return  {
                             value: item._id,
@@ -69,9 +72,9 @@ const DefaultPage = (props) => {
 
 
     return (
-        <div>
+        <div className="flex flex-1 flex-col ">
             <div>
-                <div className="flex flex-row">
+                <div className="flex flex-row gap-2">
                     <Select
                         options={users}
                         isSearchable
@@ -82,7 +85,7 @@ const DefaultPage = (props) => {
                         Add user
                     </button>
                 </div>
-                <table>
+                <table className="bg-white p-2 pt-4">
                     {
                         selectedFileContent &&
                         selectedFileContent?.csvContent.map((row, i) => {
@@ -90,15 +93,15 @@ const DefaultPage = (props) => {
                                 return null
                             }
                             return <>
-                                {i == 0 && <tr>
+                                {i == 0 && <tr className="border border-gray-300 border-1 p-1">
                                     {Object.keys(row).map((val) => {
-                                        return <th>{val}</th>
+                                        return <th className="p-2">{val}</th>
                                     })}
                                 </tr>
                                 }
-                                <tr>
+                                <tr className="border border-gray-300 border-1 p-1">
                                     {Object.keys(row).map((val) => {
-                                        return <td>{row[val]}</td>
+                                        return <td className="p-2">{row[val]}</td>
                                     })}
                                 </tr>
                             </>
@@ -106,16 +109,23 @@ const DefaultPage = (props) => {
                     }
                 </table>
             </div>
-            <div className="flex w-500 h-500 border-1  border-gray-600 bg-yellow ">
-                {
-                    selectedFileContent && charts && charts.map((chart) => {
-                        return <Chart chart={chart} data={selectedFileContent.csvContent}/>
-                    })
+            <div className="flex w-500 h-500 border-1  border-gray-600 bg-yellow w-full">
 
-                }
+            {
+                selectedFileContent &&  charts  &&
+                <ChartsGrid numCols={2} numRows={charts.length/2} charts={charts} csvContent={selectedFileContent.csvContent}/>
+
+            }
             </div>
-            <button className="border border-gray-600 p-2 rounded" onClick={() => {
-            }}>New Chart
+            <button className="border border-gray-600 p-2 rounded" onClick={ () => {
+              const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
+              yarray.push([randomNumberBetweenZeroAndTen]);
+              yarray.observe(() => {
+                console.log(yarray)
+              });
+              console.log(yarray)
+            }}>
+                New Chart
             </button>
             {
                 selectedFileContent && selectedFileContent?.csvContent &&

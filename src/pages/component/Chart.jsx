@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {LineChart, Line, Bar, BarChart, ResponsiveContainer} from 'recharts';
 import axios from "axios";
 import {useUser} from "../../UserContext";
@@ -19,8 +19,29 @@ const Chart = ({chart, data}) => {
     const [y, setY] = useState(chart.y)
     const [isLocked, setIsLocked] = useState(chart.isLocked)
     const [chartType, setChartType] = useState(chart.chartType)
+    //
+    // const [ydoc, setYDoc] = useState(null);
+    //
+    // useEffect(() => {
+    //     const getYDoc = async () => {
+    //         try {
+    //             const response = await axios.get(`http://localhost:3000/yjs`);
+    //             console.log("getYDoc = ", response.data)
+    //             setYDoc(response.data)
+    //
+    //         } catch (error) {
+    //             console.error('Error fetching CSV files:', error);
+    //         }
+    //     };
+    //
+    //     getYDoc();
+    // }, []);
 
     const handleSubmit = async () => {
+
+        // const ymapRemote = ydoc.getMap()
+        // ymapRemote.set('key_'+chart.title, chart.title)
+
         const formData = {
             userId: user,
             projectId: chart.projectId,
@@ -40,7 +61,7 @@ const Chart = ({chart, data}) => {
     };
 
     return (
-        <div className="basis-1/3 border border-gray-400 my-2 rounded p-5">
+        <div className="basis-1/2 border border-gray-400 my-2 rounded p-5">
             <div className="gap-2 flex flex-row justify-between">
                 {chart && chart.title ?
                     <div > {chart.title}

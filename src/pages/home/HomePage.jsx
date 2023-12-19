@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {useUser} from "../../UserContext";
 import {useNavigate} from "react-router-dom";
+import ProjectsGrid from "../../components/common/ProjectsGrid";
 
 const HomePage = () => {
     const {user} = useUser();
@@ -55,34 +56,26 @@ const HomePage = () => {
     return (
         <>
             <div >
-                <h2>Hello {user}</h2>
                 <button className="border border-gray-600 p-1 rounded" onClick={()=>{setNewProject(true)}}>Create New Project</button>
                 {
                     newProject &&
-                    <div className="flex flex-col w-1/2 p-5 border-1">
-                        <h2>Create New Project</h2>
+                    <div className="flex flex-col w-1/2 py-5 border-1 gap-4">
                         <input type="text" placeholder="Project Name" onChange={handleProjectChange}/>
                         <input type="file" accept=".csv" onChange={handleFileChange}/>
-                        <button className="border border-gray-600 p-1 rounded" onClick={handleSubmit}>Create</button>
+                        <div className="flex w-full gap-2">
+
+                        <button className="border border-gray-600 p-1 rounded w-1/2" onClick={()=>setNewProject(false)}>Cancel</button>
+                        <button className="border border-gray-600 p-1 rounded w-1/2" onClick={handleSubmit}>Create</button>
+                        </div>
                     </div>
                 }
                 <div>
-                    <h2 className="text-lg font-bold">Projects</h2>
-                    <ul>
-                        {projects && projects.map((ob, index) => (
-                            <li key={index} className="p-5 border border-1"
-                                onClick={()=>{
-                                    nav('/app/dashboard', { state: ob });
-                                }}
-                            >
-                                <p>{ob.projectName || ob.fileName}</p>
-                                <p>{ob.ownerId == user ? "Owner" : "Collaborator"}</p>
-
-
-
-                            </li>
-                        ))}
-                    </ul>
+                    <hr/>
+                    <h2 className="text-lg font-bold pt-10">Projects</h2>
+                    {
+                        projects && projects.length > 0 &&
+                         <ProjectsGrid numRows={projects.length/3} numCols={3} projects={projects}/>
+                    }
                 </div>
 
             </div>
