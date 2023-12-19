@@ -21,6 +21,8 @@ const DefaultPage = (props) => {
 
     useEffect(() => {
         console.log(location.state)
+
+
         const loadUsers = async () => {
             try {
                 axios.get(`http://localhost:3000/api/users/all/${user}`).then((response) => {
@@ -77,6 +79,21 @@ const collaborators = users.map(pair => pair.label);
         <div className="flex flex-1 flex-col ">
             <div>
                 <div className="flex flex-row gap-4 items-center w-full">
+                    <button className="border border-gray-600 p-2 rounded" onClick={()=>{
+
+                              const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
+                              yarray.push([randomNumberBetweenZeroAndTen]);
+                              yarray.observe(() => {
+                                console.log(yarray)
+                              });
+                    }}>
+                        Test Y JS
+                    </button>
+                    <p>
+                        {
+                            // yarray && yarray.join("-")
+                        }
+                    </p>
                     <Select
                         className="w-52"
                         options={users}
@@ -123,12 +140,6 @@ const collaborators = users.map(pair => pair.label);
             }
             </div>
             <button className="border border-gray-600 p-2 rounded w-52" onClick={ () => {
-              // const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
-              // yarray.push([randomNumberBetweenZeroAndTen]);
-              // yarray.observe(() => {
-              //   console.log(yarray)
-              // });
-              // console.log(yarray)
                 setNewChart(true)
             }}>
                 Add New Chart
