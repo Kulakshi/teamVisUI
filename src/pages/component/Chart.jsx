@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import * as Y from 'yjs'
 import {
     LineChart,
     Line,
@@ -85,7 +84,7 @@ const Chart = ({chart, data}) => {
                     :
                     <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
                 }
-                    <p className="flex flex-row"><p className="font-bold">Chart Owner: </p>{chart.ownerId}</p>
+                    <div className="flex flex-row"><p className="font-bold">Chart Owner: </p>{chart.ownerId}</div>
                 </div>
 
                 {chart._id &&
@@ -122,7 +121,7 @@ const Chart = ({chart, data}) => {
                                 <div className="flex flex-row gap-2 w-1/2">
                                     <p className="font-bold">x:</p> <select value={x} onChange={(e) => setX(e.target.value)}>
                                     {columns && columns.map((val) => {
-                                        return <option value={val}>{val}</option>
+                                        return <option value={val} key={val}>{val}</option>
                                     })}
                                 </select>
 
@@ -131,7 +130,7 @@ const Chart = ({chart, data}) => {
 
                                     <p className="font-bold">y:</p> <select value={y} onChange={(e) => setY(e.target.value)}>
                                     {columns && columns.map((val) => {
-                                            return <option value={val}>{val}</option>
+                                            return <option value={val}  key={val}>{val}</option>
                                         }
                                     )}
                                 </select>
@@ -141,7 +140,7 @@ const Chart = ({chart, data}) => {
                             <div className="flex flex-row gap-2 mt-1">
                                 <p className="font-bold">Chart type:</p> <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
                                 {chartTypes && chartTypes.map((val) => {
-                                    return <option value={val}>{val}</option>
+                                    return <option value={val} key={val}>{val}</option>
                                 })}
                             </select>
                             </div>

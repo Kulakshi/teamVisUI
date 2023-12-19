@@ -25,7 +25,7 @@ export const YjsProvider = ({ children }) => {
   Y.applyUpdate(doc, update);
 
   // Observe that the changes have merged
-  console.log(doc.toJSON());
+  console.log("UPDATED",doc.toJSON());
 });
 
   const yarray = doc.getArray("my-array");

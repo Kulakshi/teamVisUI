@@ -105,8 +105,8 @@ const collaborators = users.map(pair => pair.label);
                     <button className="border border-gray-600 p-2 rounded" onClick={addUser}>
                         Add user
                     </button>
-                    <p className="right-0 flex flex-row"><p className="font-bold">Dashboard owner:</p> {location.state.ownerId}</p>
-                    <p className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {collaborators.join(', ')}</p>
+                    <div className="right-0 flex flex-row"><p className="font-bold">Dashboard owner:</p> {location.state.ownerId}</div>
+                    <div className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {collaborators.join(', ')}</div>
                 </div>
                 <table className="bg-white p-2 pt-4">
                     {
@@ -115,19 +115,19 @@ const collaborators = users.map(pair => pair.label);
                             if (i > 10) {
                                 return null
                             }
-                            return <>
-                                {i == 0 && <tr className="border border-gray-300 border-1 p-1">
+                            return <tbody key={i}>
+                                {i == 0 && <tr className="border border-gray-300 border-1 p-1" key={i}>
                                     {Object.keys(row).map((val) => {
-                                        return <th className="p-2">{val}</th>
+                                        return <th className="p-2" key={val}>{val}</th>
                                     })}
                                 </tr>
                                 }
                                 <tr className="border border-gray-300 border-1 p-1">
                                     {Object.keys(row).map((val) => {
-                                        return <td className="p-2">{row[val]}</td>
+                                        return <td className="p-2"  key={val}>{row[val]}</td>
                                     })}
                                 </tr>
-                            </>
+                            </tbody>
                         })
                     }
                 </table>
