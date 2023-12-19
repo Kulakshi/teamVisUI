@@ -7,10 +7,12 @@ import Select from 'react-select'
 import AsyncSelect from "react-select/async";
 import {useYjs} from "../../YjsContext";
 import ChartsGrid from "../../components/common/ChartsGrid";
+import ProjectsGrid from "../../components/common/ProjectsGrid";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
     const {yarray} = useYjs()
+    const [newChart, setNewChart] = useState(null);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const [charts, setCharts] = useState([]);
     const [users, setUsers] = useState([]);
@@ -113,22 +115,23 @@ const DefaultPage = (props) => {
 
             {
                 selectedFileContent &&  charts  &&
-                <ChartsGrid numCols={2} numRows={charts.length/2} charts={charts} csvContent={selectedFileContent.csvContent}/>
+                <ChartsGrid numRows={charts.length > 2 ? charts.length/2 : charts.lengt} numCols={charts.length > 2 ? 2 : charts.length} charts={charts} csvContent={selectedFileContent.csvContent}/>
 
             }
             </div>
-            <button className="border border-gray-600 p-2 rounded" onClick={ () => {
-              const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
-              yarray.push([randomNumberBetweenZeroAndTen]);
-              yarray.observe(() => {
-                console.log(yarray)
-              });
-              console.log(yarray)
+            <button className="border border-gray-600 p-2 rounded w-52" onClick={ () => {
+              // const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
+              // yarray.push([randomNumberBetweenZeroAndTen]);
+              // yarray.observe(() => {
+              //   console.log(yarray)
+              // });
+              // console.log(yarray)
+                setNewChart(true)
             }}>
-                New Chart
+                Add New Chart
             </button>
             {
-                selectedFileContent && selectedFileContent?.csvContent &&
+                newChart && selectedFileContent && selectedFileContent?.csvContent &&
                 <Chart title={"Untitled"} data={selectedFileContent.csvContent}
                        chart={{projectId: location.state._id, ownerId: user}}/>
             }

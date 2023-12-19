@@ -17,7 +17,7 @@ const ProjectsGrid = ({ numRows, numCols, charts, csvContent }) => {
             const cellData = charts[dataIndex];
 
             return (
-              <Chart key={colIndex} title={"Untitled"} data={csvContent}
+              cellData && <Chart key={colIndex} title={"Untitled"} data={csvContent}
                        chart={cellData}/>
             );
           })}

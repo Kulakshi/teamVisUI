@@ -15,7 +15,7 @@ const ProjectsGrid = ({ numRows, numCols, projects }) => {
             const cellData = projects[dataIndex];
 
             return (
-              <div
+              cellData && <div
                 key={colIndex}
                 className="flex flex-col items-center justify-center h-28 w-1/3 bg-gray-300 border border-white"
                 onClick={()=>{
