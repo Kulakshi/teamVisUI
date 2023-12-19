@@ -8,6 +8,7 @@ import AsyncSelect from "react-select/async";
 import {useYjs} from "../../YjsContext";
 import ChartsGrid from "../../components/common/ChartsGrid";
 import ProjectsGrid from "../../components/common/ProjectsGrid";
+import {BASEUSRL} from "../../constants";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
@@ -25,7 +26,7 @@ const DefaultPage = (props) => {
 
         const loadUsers = async () => {
             try {
-                axios.get(`http://192.168.106.138:3000/api/users/all/${user}`).then((response) => {
+                axios.get(`${BASEUSRL}users/all/${user}`).then((response) => {
                     const options = response.data?.users.map((item) => {
                        return  {
                             value: item._id,
@@ -41,7 +42,7 @@ const DefaultPage = (props) => {
 
         const fetchCsvFile = async () => {
             try {
-                const response = await axios.get(`http://192.168.106.138:3000/api/dashboard/get_file`,
+                const response = await axios.get(`${BASEUSRL}dashboard/get_file`,
                     {params: {userId: user, fileId: location.state._id, isOwner:location.state.ownerId===user}});
                 setSelectedFileContent(response.data?.csvFiles);
             } catch (error) {
@@ -52,7 +53,7 @@ const DefaultPage = (props) => {
 
         const fetchCharts = async () => {
             try {
-                const response = await axios.get(`http://192.168.106.138:3000/api/dashboard/get_charts`,
+                const response = await axios.get(`${BASEUSRL}dashboard/get_charts`,
                     {params: {userId: user, projectId: location.state._id, isOwner:location.state.ownerId===user}});
                 console.log("Charts = ", response.data?.charts)
                 setCharts(response.data?.charts);
@@ -70,7 +71,7 @@ const DefaultPage = (props) => {
         setSelectedUser(inputValue.value)
     };
     const addUser = async () => {
-        const response = await axios.post('http://192.168.106.138:3000/api/dashboard/add_user',
+        const response = await axios.post(`${BASEUSRL}dashboard/add_user`,
                     {userId:selectedUser, ownerId:user, projectId:location.state._id});
     };
 

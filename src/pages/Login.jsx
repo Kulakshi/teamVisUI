@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useUser} from "../UserContext";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {BASEUSRL} from "../constants";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ const Login = () => {
 
     const handleLogin = () => {
         if (username) {
-            axios.post('http://192.168.106.138:3000/api/users/login', {userId:username}).then(
+            axios.post(`${BASEUSRL}users/login`, {userId:username}).then(
                 (response) => {
                     console.log(response.data);
                     login(username)

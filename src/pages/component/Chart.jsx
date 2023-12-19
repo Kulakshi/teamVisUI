@@ -17,12 +17,16 @@ import {Checkbox, FormControlLabel} from "@mui/material";
 import {AccessibilityNew, Face, Face2, PendingSharp} from '@mui/icons-material';
 import {useLocation} from "react-router-dom";
 import {useYjs} from "../../YjsContext";
+import {BASEUSRL} from "../../constants";
 
 
 // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
 const Chart = ({chart, data}) => {
     const {user} = useUser()
     const {ychartsmap} = useYjs()
+    ychartsmap.observe(()=>{
+        console.log(ychartsmap.size)
+    })
     const location = useLocation()
     const columns = Object.keys(data[0])
     const chartTypes = ["Bar", "Line"]
@@ -33,20 +37,7 @@ const Chart = ({chart, data}) => {
     const [isLocked, setIsLocked] = useState(chart.isLocked)
     const [chartType, setChartType] = useState(chart.chartType)
 
-
-    // useEffect(() => {
-    //     if(chart){
-    //         ychartsmap.observe(() => {
-    //             console.log(ychartsmap)
-    //         })
-    //
-    //     }
-    // }, [chart]);
-
     const handleSubmit = async () => {
-
-        // const ymapRemote = ydoc.getMap()
-        // ymapRemote.set('key_'+chart.title, chart.title)
 
         const formData = {
             userId: user,
@@ -59,18 +50,16 @@ const Chart = ({chart, data}) => {
             isOwner: location.state.ownerId === user
         };
         try {
-            axios.post('http://192.168.106.138:3000/api/dashboard/save_chart', formData).then(
+            axios.post(`${BASEUSRL}dashboard/save_chart`, formData).then(
                 (response)=>{
-                    console.log("444",ychartsmap);
 
                     // ychartsmap.set(chart._id, response.data.chart);
                     ychartsmap.set(chart._id, response.data.chart);
-                    console.log("asas",ychartsmap);
-                    ychartsmap.observe((e) => {
-                        // console.log("observe after save ", ychartsmap.entries())
-                        // console.log("observe after save ", ychartsmap.get(chart._id))
-                        console.log("observe after save ", e.changes, ychartsmap)
-                    })
+                    // ychartsmap.observe((e) => {
+                    //     // console.log("observe after save ", ychartsmap.entries())
+                    //     // console.log("observe after save ", ychartsmap.get(chart._id))
+                    //     console.log("observe after save ", e.changes, ychartsmap)
+                    // })
                 }
             )
 
