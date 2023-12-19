@@ -35,7 +35,7 @@ const DefaultPage = (props) => {
         const fetchCsvFile = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/dashboard/get_file`,
-                    {params: {userId: user, fileId: location.state._id}});
+                    {params: {userId: user, fileId: location.state._id, isOwner:location.state.ownerId===user}});
                 setSelectedFileContent(response.data?.csvFiles);
             } catch (error) {
                 console.error('Error fetching CSV files:', error);
@@ -46,7 +46,7 @@ const DefaultPage = (props) => {
         const fetchCharts = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/dashboard/get_charts`,
-                    {params: {userId: user, projectId: location.state._id}});
+                    {params: {userId: user, projectId: location.state._id, isOwner:location.state.ownerId===user}});
                 console.log("Charts = ", response.data?.charts)
                 setCharts(response.data?.charts);
             } catch (error) {

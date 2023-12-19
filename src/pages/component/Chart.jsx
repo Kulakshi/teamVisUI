@@ -4,11 +4,13 @@ import axios from "axios";
 import {useUser} from "../../UserContext";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import { AccessibilityNew, Face, Face2, PendingSharp } from '@mui/icons-material';
+import {useLocation} from "react-router-dom";
 
 
 // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
 const Chart = ({chart, data}) => {
     const {user} = useUser()
+    const location = useLocation()
     const columns = Object.keys(data[0])
     const chartTypes = ["Bar", "Line"]
 
@@ -26,7 +28,8 @@ const Chart = ({chart, data}) => {
             x,
             y,
             chartType,
-            isLocked
+            isLocked,
+            isOwner:location.state.ownerId===user
         };
         try {
             const response = await axios.post('http://localhost:3000/api/dashboard/save_chart', formData);
