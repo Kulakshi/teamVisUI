@@ -74,13 +74,17 @@ const Chart = ({chart, data}) => {
     return (
         <div className="basis-1/2 border border-gray-400 my-2 rounded p-5 bg-gray-200 gap-2">
             <div className="gap-2 flex flex-row justify-between">
-                {chart && chart.title ?
-                    <div> {chart.title}
-                        <Face/>
+                <div className="flex flex-row justify-between w-full">
+                    {chart && chart.title ?
+                    <div className="text-lg font-semibold"> {chart.title}
+                        {/*<Face/>*/}
                     </div>
                     :
                     <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
                 }
+                    <p className="flex flex-row"><p className="font-bold">Chart Owner: </p>{chart.ownerId}</p>
+                </div>
+
                 {chart._id &&
                     <div className="gap-2">
                         {

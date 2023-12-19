@@ -4,10 +4,8 @@ import {useUser} from "../../UserContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import Chart from "../../pages/component/Chart";
 
-const ProjectsGrid = ({ numRows, numCols, charts, csvContent }) => {
-  const {user} = useUser();
-  const location = useLocation();
-  const nav = useNavigate()
+const ChartsGrid = ({ numRows, numCols, charts, csvContent }) => {
+  console.log("====",numCols, numRows, charts)
   return (
     <div className={`grid grid-cols-${numCols} gap-10 w-full`}>
       {Array.from({ length: numRows }, (_, rowIndex) => (
@@ -27,4 +25,4 @@ const ProjectsGrid = ({ numRows, numCols, charts, csvContent }) => {
   );
 };
 
-export default ProjectsGrid;
+export default ChartsGrid;

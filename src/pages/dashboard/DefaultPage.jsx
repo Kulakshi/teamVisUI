@@ -72,12 +72,13 @@ const DefaultPage = (props) => {
                     {userId:selectedUser, ownerId:user, projectId:location.state._id});
     };
 
-
+const collaborators = users.map(pair => pair.label);
     return (
         <div className="flex flex-1 flex-col ">
             <div>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-4 items-center w-full">
                     <Select
+                        className="w-52"
                         options={users}
                         isSearchable
                         isClearable
@@ -86,6 +87,8 @@ const DefaultPage = (props) => {
                     <button className="border border-gray-600 p-2 rounded" onClick={addUser}>
                         Add user
                     </button>
+                    <p className="right-0 flex flex-row"><p className="font-bold">Dashboard owner:</p> {location.state.ownerId}</p>
+                    <p className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {collaborators.join(', ')}</p>
                 </div>
                 <table className="bg-white p-2 pt-4">
                     {
@@ -115,7 +118,7 @@ const DefaultPage = (props) => {
 
             {
                 selectedFileContent &&  charts  &&
-                <ChartsGrid numRows={charts.length > 2 ? charts.length/2 : charts.lengt} numCols={charts.length > 2 ? 2 : charts.length} charts={charts} csvContent={selectedFileContent.csvContent}/>
+                <ChartsGrid numRows={charts.length > 2 ? charts.length/2 : charts.length} numCols={charts.length > 2 ? 2 : charts.length} charts={charts} csvContent={selectedFileContent.csvContent}/>
 
             }
             </div>

@@ -15,8 +15,12 @@ const HomePage = () => {
 
         const fetchCsvFiles = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/dashboard/get_files/${user}`);
-                setProjects(response.data);
+                axios.get(`http://localhost:3000/api/dashboard/get_files/${user}`).then(
+                    (response)=>{
+                        setProjects(response.data);
+                    }
+                )
+
             } catch (error) {
                 console.error('Error fetching CSV files:', error);
             }
