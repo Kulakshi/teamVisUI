@@ -11,7 +11,7 @@ export const useYjs = () => {
 export const YjsProvider = ({ children }) => {
   const doc = new Y.Doc();
   const wsProvider = new WebsocketProvider(
-    "ws://192.168.106.138:1234",
+    "ws://localhost:1234",
     "my-roomname",
     doc
   );

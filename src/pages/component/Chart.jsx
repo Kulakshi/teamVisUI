@@ -24,8 +24,8 @@ import {BASEUSRL} from "../../constants";
 const Chart = ({chart, data}) => {
     const {user} = useUser()
     const {ychartsmap} = useYjs()
-    ychartsmap.observe(()=>{
-        console.log(ychartsmap.size)
+    ychartsmap.observeDeep(()=>{
+        console.log("size",ychartsmap.size)
     })
     const location = useLocation()
     const columns = Object.keys(data[0])
