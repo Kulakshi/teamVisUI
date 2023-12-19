@@ -19,23 +19,25 @@ import {useLocation} from "react-router-dom";
 import {useYjs} from "../../YjsContext";
 import {BASEUSRL} from "../../constants";
 
-
-// const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
 const Chart = ({chart, data}) => {
     const {user} = useUser()
     const {ychartsmap, doc} = useYjs()
 
     let ychart;
-    if (chart._id) {
-        ychart = doc.getMap(chart._id);
-        if (ychart && chart) {
-            ychart.set(chart._id, chart)
-            ychart.observeDeep(() => {
-                console.log("size", ychart.size)
-                console.log("get", ychart.get(chart._id))
-            })
+    useEffect(() => {
+        if (chart._id) {
+            console.log("chart._id is defined....")
+            ychart = doc.getMap(chart._id);
+            if (ychart && chart) {
+                ychart.set(chart._id, chart)
+                ychart.observeDeep(() => {
+                    console.log("size", ychart.size)
+                    console.log("get", ychart.get(chart._id))
+                })
+            }
         }
-    }
+    }, [chart]);
+
     const location = useLocation()
     const columns = Object.keys(data[0])
     const chartTypes = ["Bar", "Line"]
@@ -61,14 +63,12 @@ const Chart = ({chart, data}) => {
         try {
             axios.post(`${BASEUSRL}dashboard/save_chart`, formData).then(
                 (response)=>{
-
-                    // ychartsmap.set(chart._id, response.data.chart);
-                    ychart.set(chart._id, response.data.chart);
-                    // ychartsmap.observe((e) => {
-                    //     // console.log("observe after save ", ychartsmap.entries())
-                    //     // console.log("observe after save ", ychartsmap.get(chart._id))
-                    //     console.log("observe after save ", e.changes, ychartsmap)
-                    // })
+                    const updatedChart = response.data.chart
+                    console.log("updatedChart", updatedChart , updatedChart._id)
+                    if (updatedChart && updatedChart._id) {
+                        if (!ychart) ychart = doc.getMap(updatedChart._id);
+                        ychart.set(updatedChart._id, updatedChart);
+                    }
                 }
             )
 
