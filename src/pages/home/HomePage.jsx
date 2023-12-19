@@ -15,7 +15,7 @@ const HomePage = () => {
 
         const fetchCsvFiles = async () => {
             try {
-                axios.get(`http://localhost:3000/api/dashboard/get_files/${user}`).then(
+                axios.get(`http://192.168.106.138:3000/api/dashboard/get_files/${user}`).then(
                     (response)=>{
                         setProjects(response.data);
                     }
@@ -45,7 +45,7 @@ const HomePage = () => {
         formData.append('csvFile', csvFile);
 
         try {
-            const response = await axios.post('http://localhost:3000/api/dashboard/new_project', formData, {
+            const response = await axios.post('http://192.168.106.138:3000/api/dashboard/new_project', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -11,7 +11,7 @@ export const useYjs = () => {
 export const YjsProvider = ({ children }) => {
   const doc = new Y.Doc();
   const wsProvider = new WebsocketProvider(
-    "ws://localhost:1234",
+    "ws://192.168.106.138:1234",
     "my-roomname",
     doc
   );
@@ -21,8 +21,9 @@ export const YjsProvider = ({ children }) => {
   });
 
   const yarray = doc.getArray("my-array");
+  const ychartsmap = doc.getMap("charts");
   console.log(yarray)
-
+  console.log("123",ychartsmap)
   useEffect(() => {
     return () => {
       // Clean up resources if needed
@@ -31,7 +32,7 @@ export const YjsProvider = ({ children }) => {
   }, []);
 
   return (
-    <YjsContext.Provider value={{ doc, yarray }}>
+    <YjsContext.Provider value={{ doc, yarray, ychartsmap }}>
       {children}
     </YjsContext.Provider>
   );

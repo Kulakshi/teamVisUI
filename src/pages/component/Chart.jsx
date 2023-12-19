@@ -16,11 +16,13 @@ import {useUser} from "../../UserContext";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import {AccessibilityNew, Face, Face2, PendingSharp} from '@mui/icons-material';
 import {useLocation} from "react-router-dom";
+import {useYjs} from "../../YjsContext";
 
 
 // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
 const Chart = ({chart, data}) => {
     const {user} = useUser()
+    const {ychartsmap} = useYjs()
     const location = useLocation()
     const columns = Object.keys(data[0])
     const chartTypes = ["Bar", "Line"]
@@ -30,23 +32,16 @@ const Chart = ({chart, data}) => {
     const [y, setY] = useState(chart.y)
     const [isLocked, setIsLocked] = useState(chart.isLocked)
     const [chartType, setChartType] = useState(chart.chartType)
-    //
-    // const [ydoc, setYDoc] = useState(null);
-    //
+
+
     // useEffect(() => {
-    //     const getYDoc = async () => {
-    //         try {
-    //             const response = await axios.get(`http://localhost:3000/yjs`);
-    //             console.log("getYDoc = ", response.data)
-    //             setYDoc(response.data)
+    //     if(chart){
+    //         ychartsmap.observe(() => {
+    //             console.log(ychartsmap)
+    //         })
     //
-    //         } catch (error) {
-    //             console.error('Error fetching CSV files:', error);
-    //         }
-    //     };
-    //
-    //     getYDoc();
-    // }, []);
+    //     }
+    // }, [chart]);
 
     const handleSubmit = async () => {
 
@@ -64,8 +59,22 @@ const Chart = ({chart, data}) => {
             isOwner: location.state.ownerId === user
         };
         try {
-            const response = await axios.post('http://localhost:3000/api/dashboard/save_chart', formData);
-            console.log(response.data);
+            axios.post('http://192.168.106.138:3000/api/dashboard/save_chart', formData).then(
+                (response)=>{
+                    console.log("444",ychartsmap);
+
+                    // ychartsmap.set(chart._id, response.data.chart);
+                    ychartsmap.set(chart._id, response.data.chart);
+                    console.log("asas",ychartsmap);
+                    ychartsmap.observe((e) => {
+                        // console.log("observe after save ", ychartsmap.entries())
+                        // console.log("observe after save ", ychartsmap.get(chart._id))
+                        console.log("observe after save ", e.changes, ychartsmap)
+                    })
+                }
+            )
+
+
         } catch (error) {
             console.error('Error uploading file:', error);
         }

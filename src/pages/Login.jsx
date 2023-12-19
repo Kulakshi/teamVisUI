@@ -12,7 +12,7 @@ const Login = () => {
 
     const handleLogin = () => {
         if (username) {
-            axios.post('http://localhost:3000/api/users/login', {userId:username}).then(
+            axios.post('http://192.168.106.138:3000/api/users/login', {userId:username}).then(
                 (response) => {
                     console.log(response.data);
                     login(username)
