@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import * as Y from 'yjs'
 import {
     LineChart,
     Line,
@@ -23,9 +24,13 @@ import {BASEUSRL} from "../../constants";
 // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
 const Chart = ({chart, data}) => {
     const {user} = useUser()
-    const {ychartsmap} = useYjs()
-    ychartsmap.observeDeep(()=>{
-        console.log("size",ychartsmap.size)
+    const {ychartsmap, doc} = useYjs()
+
+    const ychart = doc.getMap(chart._id);
+    ychart.set(chart._id, chart)
+    ychart.observeDeep(()=>{
+        console.log("size",ychart.size)
+        console.log("get",ychart.get(chart._id))
     })
     const location = useLocation()
     const columns = Object.keys(data[0])
@@ -54,7 +59,7 @@ const Chart = ({chart, data}) => {
                 (response)=>{
 
                     // ychartsmap.set(chart._id, response.data.chart);
-                    ychartsmap.set(chart._id, response.data.chart);
+                    ychart.set(chart._id, response.data.chart);
                     // ychartsmap.observe((e) => {
                     //     // console.log("observe after save ", ychartsmap.entries())
                     //     // console.log("observe after save ", ychartsmap.get(chart._id))

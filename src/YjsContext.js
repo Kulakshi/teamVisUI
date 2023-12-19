@@ -20,6 +20,14 @@ export const YjsProvider = ({ children }) => {
     console.log(event.status); // logs "connected" or "disconnected"
   });
 
+  wsProvider.on('update', (update) => {
+  // Apply the received update to synchronize the document
+  Y.applyUpdate(doc, update);
+
+  // Observe that the changes have merged
+  console.log(doc.toJSON());
+});
+
   const yarray = doc.getArray("my-array");
   const ychartsmap = doc.getMap("charts");
   console.log(yarray)
