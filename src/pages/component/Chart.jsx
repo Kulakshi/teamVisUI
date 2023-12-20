@@ -14,7 +14,6 @@ import {
 import axios from "axios";
 import {useUser} from "../../UserContext";
 import {Checkbox, FormControlLabel} from "@mui/material";
-import {AccessibilityNew, Face, Face2, PendingSharp} from '@mui/icons-material';
 import {useLocation} from "react-router-dom";
 import {useYjs} from "../../YjsContext";
 import {BASEUSRL} from "../../constants";
@@ -29,7 +28,7 @@ const Chart = ({chart, data}) => {
             console.log("chart._id is defined....")
             ychart = doc.getMap(chart._id);
             if (ychart && chart) {
-                ychart.set(chart._id, chart)
+                ychart.set(chart._id, {user,chart})
                 ychart.observeDeep(() => {
                     console.log("size", ychart.size)
                     console.log("get", ychart.get(chart._id))
@@ -64,10 +63,9 @@ const Chart = ({chart, data}) => {
             axios.post(`${BASEUSRL}dashboard/save_chart`, formData).then(
                 (response)=>{
                     const updatedChart = response.data.chart
-                    console.log("updatedChart", updatedChart , updatedChart._id)
                     if (updatedChart && updatedChart._id) {
                         if (!ychart) ychart = doc.getMap(updatedChart._id);
-                        ychart.set(updatedChart._id, updatedChart);
+                        ychart.set(updatedChart._id, {user,updatedChart});
                     }
                 }
             )

@@ -20,15 +20,13 @@ export const YjsProvider = ({children}) => {
         console.log(event.status); // logs "connected" or "disconnected"
     });
 
-    wsProvider.on('update', (update) => {
-        // Apply the received update to synchronize the document
+    doc.on('update', (update) => {
+        // console.log('Received update:', update);
         Y.applyUpdate(doc, update);
-        // Observe that the changes have merged
-        console.log("UPDATED!!!");
-        // console.log("UPDATED", doc.toJSON());
+        // console.log("UPDATED!!!");
     });
 
-    wsProvider.on('error', (error) => {
+    doc.on('error', (error) => {
       console.error('WebSocket error:', error);
     });
 
