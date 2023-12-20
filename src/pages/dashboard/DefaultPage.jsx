@@ -12,7 +12,6 @@ import {BASEUSRL} from "../../constants";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
-    const {yarray, setUerOnline} = useYjs()
     const [newChart, setNewChart] = useState(null);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const [charts, setCharts] = useState([]);
@@ -20,12 +19,7 @@ const DefaultPage = (props) => {
     const [selectedUser, setSelectedUser] = useState([]);
     const location = useLocation()
 
-    setUerOnline(user)
-
     useEffect(() => {
-        console.log(location.state)
-
-
         const loadUsers = async () => {
             try {
                 axios.get(`${BASEUSRL}users/all/${user}`).then((response) => {
@@ -57,7 +51,6 @@ const DefaultPage = (props) => {
             try {
                 const response = await axios.get(`${BASEUSRL}dashboard/get_charts`,
                     {params: {userId: user, projectId: location.state._id, isOwner:location.state.ownerId===user}});
-                console.log("Charts = ", response.data?.charts)
                 setCharts(response.data?.charts);
             } catch (error) {
                 console.error('Error fetching charts:', error);
@@ -82,16 +75,6 @@ const collaborators = users.map(pair => pair.label);
         <div className="flex flex-1 flex-col ">
             <div>
                 <div className="flex flex-row gap-4 items-center w-full">
-                    <button className="border border-gray-600 p-2 rounded" onClick={()=>{
-
-                              const randomNumberBetweenZeroAndTen = Math.floor(Math.random() * 10);
-                              yarray.push([randomNumberBetweenZeroAndTen]);
-                              yarray.observe(() => {
-                                console.log(yarray)
-                              });
-                    }}>
-                        Test Y JS
-                    </button>
                     <p>
                         {
                             // yarray && yarray.join("-")

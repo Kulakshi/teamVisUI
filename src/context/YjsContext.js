@@ -17,17 +17,20 @@ export const YjsProvider = ({children}) => {
     );
 
     const activeUsers = new Set()
-    wsProvider.awareness.on('change', ({ added, updated, removed }) => {
-      // console.log('Users added:', added);
-      // console.log('Users updated:', updated);
-      // console.log('Users removed:', removed);
-      activeUsers.add(...added)
-      console.log('activeUsersd:', activeUsers);
+    wsProvider.awareness.on('change', changes => {
+        const users = wsProvider.awareness.getStates()
+        users.forEach((item) => {
+                if (item.value) {
+                    activeUsers.add(item.value?.userId)
+                }
+            })
+
+      console.log('activeUsers:', ...activeUsers);
     });
 
     const setUerOnline = (userId) =>{
         wsProvider.awareness.setLocalState({
-         userId: userId
+            userId: userId
         });
     }
 
@@ -38,17 +41,14 @@ export const YjsProvider = ({children}) => {
     doc.on('update', (update) => {
         console.log('Received update:');
         Y.applyUpdate(doc, update);
-        console.log('Updated!!:');
+        console.log('Updated:');
     });
 
     doc.on('error', (error) => {
       console.error('WebSocket error:', error);
     });
 
-    const yarray = doc.getArray("my-array");
     const ychartsmap = doc.getMap("charts");
-    console.log(yarray)
-    console.log("123", ychartsmap)
     useEffect(() => {
         return () => {
             // Clean up resources if needed
@@ -57,7 +57,7 @@ export const YjsProvider = ({children}) => {
     }, []);
 
     return (
-        <YjsContext.Provider value={{doc, yarray, ychartsmap, setUerOnline}}>
+        <YjsContext.Provider value={{doc, ychartsmap, setUerOnline}}>
             {children}
         </YjsContext.Provider>
     );

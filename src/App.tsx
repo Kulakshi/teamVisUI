@@ -12,8 +12,8 @@ require('./index.css')
 function App() {
     return (
         <React.StrictMode>
-            <UserProvider>
                 <YjsProvider>
+            <UserProvider>
                     <NotificationProvider>
                         <BrowserRouter>
                             <Routes>
@@ -24,8 +24,8 @@ function App() {
                             </Routes>
                         </BrowserRouter>
                     </NotificationProvider>
-                </YjsProvider>
             </UserProvider>
+                </YjsProvider>
         </React.StrictMode>
     );
 }
