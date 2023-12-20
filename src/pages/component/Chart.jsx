@@ -12,27 +12,35 @@ import {
     CartesianGrid
 } from 'recharts';
 import axios from "axios";
-import {useUser} from "../../UserContext";
+import {useUser} from "../../context/UserContext";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import {useLocation} from "react-router-dom";
-import {useYjs} from "../../YjsContext";
+import {useYjs} from "../../context/YjsContext";
 import {BASEUSRL} from "../../constants";
+import {useNotification} from "../../context/NotificationContext";
 
 const Chart = ({chart, data}) => {
     const {user} = useUser()
-    const {ychartsmap, doc} = useYjs()
+    const {doc} = useYjs()
+    const {showNotification} = useNotification()
+
+    const setYChartsObserver = (chart) => {
+        ychart.set(chart._id, {user, chart})
+        ychart.observeDeep(() => {
+            const update = ychart.get(chart._id)
+            console.log("get", chart._id, update)
+            if (update.user !== user) {
+                showNotification(`${update.user} updated ${chart.title} chart`)
+            }
+        })
+    }
 
     let ychart;
     useEffect(() => {
         if (chart._id) {
-            console.log("chart._id is defined....")
             ychart = doc.getMap(chart._id);
             if (ychart && chart) {
-                ychart.set(chart._id, {user,chart})
-                ychart.observeDeep(() => {
-                    console.log("size", ychart.size)
-                    console.log("get", ychart.get(chart._id))
-                })
+                setYChartsObserver(chart)
             }
         }
     }, [chart]);
@@ -61,11 +69,11 @@ const Chart = ({chart, data}) => {
         };
         try {
             axios.post(`${BASEUSRL}dashboard/save_chart`, formData).then(
-                (response)=>{
+                (response) => {
                     const updatedChart = response.data.chart
                     if (updatedChart && updatedChart._id) {
-                        if (!ychart) ychart = doc.getMap(updatedChart._id);
-                        ychart.set(updatedChart._id, {user,updatedChart});
+                        if (!ychart) setYChartsObserver(updatedChart);
+                        ychart.set(updatedChart._id, {user, updatedChart});
                     }
                 }
             )
@@ -81,12 +89,12 @@ const Chart = ({chart, data}) => {
             <div className="gap-2 flex flex-row justify-between">
                 <div className="flex flex-row justify-between w-full">
                     {chart && chart.title ?
-                    <div className="text-lg font-semibold"> {chart.title}
-                        {/*<Face/>*/}
-                    </div>
-                    :
-                    <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
-                }
+                        <div className="text-lg font-semibold"> {chart.title}
+                            {/*<Face/>*/}
+                        </div>
+                        :
+                        <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
+                    }
                     <div className="flex flex-row"><p className="font-bold">Chart Owner: </p>{chart.ownerId}</div>
                 </div>
 
@@ -116,13 +124,15 @@ const Chart = ({chart, data}) => {
                         <div className="flex gap-2">
                             <span className="flex flex-row gap-2"><p className="font-bold">x:</p> {x}</span>
                             <span className="flex flex-row gap-2"><p className="font-bold">y:</p> {y}</span>
-                            <span className="flex flex-row gap-2"><p className="font-bold">Chart type:</p> {chartType}</span>
+                            <span className="flex flex-row gap-2"><p
+                                className="font-bold">Chart type:</p> {chartType}</span>
                         </div>
                         :
                         <div className="gap-2">
                             <div className="gap-3 flex flex-row justify-between">
                                 <div className="flex flex-row gap-2 w-1/2">
-                                    <p className="font-bold">x:</p> <select value={x} onChange={(e) => setX(e.target.value)}>
+                                    <p className="font-bold">x:</p> <select value={x}
+                                                                            onChange={(e) => setX(e.target.value)}>
                                     {columns && columns.map((val) => {
                                         return <option value={val} key={val}>{val}</option>
                                     })}
@@ -131,9 +141,10 @@ const Chart = ({chart, data}) => {
                                 </div>
                                 <div className="flex flex-row gap-2  w-1/2">
 
-                                    <p className="font-bold">y:</p> <select value={y} onChange={(e) => setY(e.target.value)}>
+                                    <p className="font-bold">y:</p> <select value={y}
+                                                                            onChange={(e) => setY(e.target.value)}>
                                     {columns && columns.map((val) => {
-                                            return <option value={val}  key={val}>{val}</option>
+                                            return <option value={val} key={val}>{val}</option>
                                         }
                                     )}
                                 </select>
@@ -141,7 +152,8 @@ const Chart = ({chart, data}) => {
 
                             </div>
                             <div className="flex flex-row gap-2 mt-1">
-                                <p className="font-bold">Chart type:</p> <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
+                                <p className="font-bold">Chart type:</p> <select value={chartType}
+                                                                                 onChange={(e) => setChartType(e.target.value)}>
                                 {chartTypes && chartTypes.map((val) => {
                                     return <option value={val} key={val}>{val}</option>
                                 })}

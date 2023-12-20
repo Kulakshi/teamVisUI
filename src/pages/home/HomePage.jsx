@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {useUser} from "../../UserContext";
+import {useUser} from "../../context/UserContext";
 import {useNavigate} from "react-router-dom";
 import ProjectsGrid from "../../components/common/ProjectsGrid";
 import {BASEUSRL} from "../../constants";

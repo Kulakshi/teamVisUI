@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useUser} from "../UserContext";
+import {useUser} from "../context/UserContext";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {BASEUSRL} from "../constants";

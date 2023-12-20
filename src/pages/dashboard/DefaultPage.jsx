@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import Chart from "../component/Chart";
 import {useLocation} from "react-router-dom";
-import {useUser} from "../../UserContext";
+import {useUser} from "../../context/UserContext";
 import Select from 'react-select'
 import AsyncSelect from "react-select/async";
-import {useYjs} from "../../YjsContext";
+import {useYjs} from "../../context/YjsContext";
 import ChartsGrid from "../../components/common/ChartsGrid";
 import ProjectsGrid from "../../components/common/ProjectsGrid";
 import {BASEUSRL} from "../../constants";

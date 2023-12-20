@@ -21,9 +21,9 @@ export const YjsProvider = ({children}) => {
     });
 
     doc.on('update', (update) => {
-        // console.log('Received update:', update);
+        console.log('Received update:', update);
         Y.applyUpdate(doc, update);
-        // console.log("UPDATED!!!");
+        console.log('Updated:', update);
     });
 
     doc.on('error', (error) => {

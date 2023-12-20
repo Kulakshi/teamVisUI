@@ -1,6 +1,6 @@
 // Grid.js
 import React from 'react';
-import {useUser} from "../../UserContext";
+import {useUser} from "../../context/UserContext";
 import {useNavigate} from "react-router-dom";
 
 const ProjectsGrid = ({ numRows, numCols, projects }) => {
