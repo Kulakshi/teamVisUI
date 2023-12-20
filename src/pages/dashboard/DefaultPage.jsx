@@ -136,7 +136,12 @@ const collaborators = users.map(pair => pair.label);
 
             {
                 selectedFileContent &&  charts  &&
-                <ChartsGrid numRows={charts.length > 2 ? charts.length/2 : charts.length} numCols={charts.length > 2 ? 2 : charts.length} charts={charts} csvContent={selectedFileContent.csvContent}/>
+                    <ChartsGrid
+                    numRows={charts && charts.length > 2 ? Math.ceil(charts.length / 2) : 1}
+                    numCols={charts && charts.length > 2 ? 2 : charts.length}
+                    charts={charts}
+                    csvContent={selectedFileContent?.csvContent}
+                    />
 
             }
             </div>

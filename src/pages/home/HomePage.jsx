@@ -56,6 +56,8 @@ const HomePage = () => {
             console.log(response.data);
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            setNewProject(false);
         }
     };
 
@@ -81,7 +83,11 @@ const HomePage = () => {
                     <h2 className="text-lg font-bold pt-10">Projects</h2>
                     {
                         projects && projects.length > 0 &&
-                         <ProjectsGrid numRows={projects.length > 3 ? projects.length/3 : projects.length} numCols={projects.length > 3 ? 3 : projects.length} projects={projects}/>
+                        <ProjectsGrid
+                        numRows={projects.length > 3 ? Math.ceil(projects.length / 3) : projects.length}
+                        numCols={projects.length > 3 ? 3 : projects.length}
+                        projects={projects}
+                      />                  
                     }
                 </div>
 
