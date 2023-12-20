@@ -78,7 +78,7 @@ const HomePage = () => {
                     </div>
                 }
                 <div>
-                    <hr/>
+                    <hr className="my-1"/>
                     <h2 className="text-lg font-bold pt-10">Projects</h2>
                     {
                         projects && projects.length > 0 &&

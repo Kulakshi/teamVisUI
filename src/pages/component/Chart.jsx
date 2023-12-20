@@ -45,7 +45,7 @@ const Chart = ({chart, data}) => {
                 setHasUpdated(true)
                 setLastUpdated(update.chart)
                 setChart(update.chart)
-                console.log("update====",e.remote, e.changes)
+                console.log("update====", e.remote, e.changes)
             } else {
                 setHasUpdated(false)
             }
@@ -145,7 +145,7 @@ const Chart = ({chart, data}) => {
     };
 
     return (
-        <div className="basis-1/2 border border-gray-400 my-2 rounded p-5 bg-gray-200 gap-2">
+        <div className="basis-1/2 border border-gray-400 my-2 rounded p-5 bg-white gap-2">
             <div className="gap-2 flex flex-row justify-between">
                 <div className="flex flex-row justify-between w-full">
                     {chart && chart.title ?
@@ -153,7 +153,8 @@ const Chart = ({chart, data}) => {
                             {/*<Face/>*/}
                         </div>
                         :
-                        <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
+                        <div> Title: <input className="border border-1 border-gray-300" type="text"
+                                            onChange={(e) => setNewTitle(e.target.value)}/></div>
                     }
                     <div>
                         <a data-tooltip-id="chartdetails" data-tooltip-content={
@@ -166,7 +167,7 @@ const Chart = ({chart, data}) => {
                 </div>
 
             </div>
-            <hr/>
+            <hr className="my-1"/>
             {notifs &&
                 <div className="flex flex-row gap-2 items-center">
                     <div className="h-3 w-3 rounded bg-green-600"/>
@@ -174,7 +175,6 @@ const Chart = ({chart, data}) => {
                 </div>
             }
 
-            <hr/>
             <div className="gap-2 flex flex-row my-2">
                 {
                     // isLocked && user != chart.ownerId && user != project.ownerId?
@@ -189,7 +189,8 @@ const Chart = ({chart, data}) => {
                         <div className="gap-2">
                             <div className="gap-3 flex flex-row justify-between">
                                 <div className="flex flex-row gap-2 w-1/2">
-                                    <p className="font-bold">x:</p> <select value={x}
+                                    <p className="font-bold">x:</p> <select className="border border-1 border-gray-300"
+                                                                            value={x}
                                                                             onChange={(e) => {
                                                                                 setX(e.target.value)
                                                                                 setYMap()
@@ -202,7 +203,8 @@ const Chart = ({chart, data}) => {
                                 </div>
                                 <div className="flex flex-row gap-2  w-1/2">
 
-                                    <p className="font-bold">y:</p> <select value={y}
+                                    <p className="font-bold">y:</p> <select className="border border-1 border-gray-300"
+                                                                            value={y}
                                                                             onChange={(e) => {
                                                                                 setY(e.target.value)
                                                                                 setYMap()
@@ -219,11 +221,13 @@ const Chart = ({chart, data}) => {
                             <div className="flex flex-row gap-2 mt-1">
                                 <div className="w-2/3 flex flex-row">
 
-                                    <p className="font-bold">Chart type:</p> <select value={chartType}
-                                                                                     onChange={(e) => {
-                                                                                         setChartType(e.target.value)
-                                                                                         setYMap()
-                                                                                     }}>
+                                    <p className="font-bold">Chart type:</p> <select
+                                    className="border border-1 border-gray-300"
+                                    value={chartType}
+                                    onChange={(e) => {
+                                        setChartType(e.target.value)
+                                        setYMap()
+                                    }}>
                                     {chartTypes && chartTypes.map((val) => {
                                         return <option value={val} key={val}>{val}</option>
                                     })}
@@ -258,7 +262,7 @@ const Chart = ({chart, data}) => {
 
             {
                 x && y && chartType === "Line" &&
-                <ResponsiveContainer width="100%" height={400}>
+                <ResponsiveContainer width="100%" height={400} className="border border-1 border-gray-300">
                     <LineChart width={400} height={400} data={data} className="bg-white" margin={{
                         top: 20,
                         right: 30,
@@ -277,7 +281,7 @@ const Chart = ({chart, data}) => {
 
             {
                 x && y && chartType === "Bar" &&
-                <ResponsiveContainer width="100%" height={400}>
+                <ResponsiveContainer width="100%" height={400} className="border border-1 border-gray-300">
                     <BarChart width={400} height={400} data={data} className="bg-white">
 
                         <CartesianGrid strokeDasharray="3 3"/>
@@ -293,7 +297,7 @@ const Chart = ({chart, data}) => {
 
             <div className="flex flex-row gap-2">
 
-                {
+                {chart._id &&
                     <button className="border border-gray-600 p-2 mt-5 rounded w-1/2" onClick={fetchChart}> Refresh
                     </button>
 

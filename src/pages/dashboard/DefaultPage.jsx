@@ -93,6 +93,10 @@ const DefaultPage = (props) => {
         <div className="flex flex-1 flex-col ">
             <div>
                 <div className="flex flex-row gap-4 items-center w-full">
+                    {
+                        user === location.state.ownerId &&
+                        <div className="flex flex-row gap-4 items-center">
+
                     <Select
                         className="w-52"
                         options={users}
@@ -100,16 +104,19 @@ const DefaultPage = (props) => {
                         isClearable
                         isMulti={false}
                         onChange={handleSearch}/>
-                    <button className="border border-gray-600 p-2 rounded" onClick={addUser}>
-                        Add user
-                    </button>
+                            <button className="border border-gray-600 p-1 px-2 rounded" onClick={addUser}>
+                                Add user
+                            </button>
+
+                        </div>
+                    }
                     <div className="right-0 flex flex-row"><p className="font-bold">Dashboard
                         owner:</p> {location.state.ownerId}</div>
                     <div className="right-0 flex flex-row"><p
                         className="font-bold">Collaborators:</p> {projectUsers.join(', ')}</div>
                 </div>
-                <div className="bg-white p-2 my-4 h-80 overflow-y-scroll">
-                    <table>
+                <div className="bg-white p-2 my-4 h-80 overflow-y-scroll rounded-xl border border-1 border-gray-400">
+                    <table className="bg-white rounded-xl">
                         {
                             selectedFileContent &&
                             selectedFileContent?.csvContent.map((row, i) => {
