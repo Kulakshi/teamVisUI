@@ -22,15 +22,15 @@ const Topbar = () => {
         color: colorConfigs.topbar.color
       }}
     >
-      <div className="pl-52 flex flex-row items-center bg-gray-600">
+      <div className="pl-20 flex flex-row items-center bg-gray-600">
         <p className="text-2xl font-bold text-gray-200">
           TeamVis
         </p>
-        <p className="p-2 font-bold text-xl w-full items-end text-white" >
-          {user && user}
+        <p className="p-2 ml-20 w-full items-end text-white" >
+          Hello {user && user}!
         </p>
           {/*<p className="w-full h-full mr-10 text-green-500"><NotificationAddOutlined/> Mangfei is added to the dasboard</p>*/}
-          <HomeOutlined className="w-full h-full mr-56 text-white" onClick={()=>{
+          <HomeOutlined className="w-full h-full mr-20 text-white" onClick={()=>{
               nav("/app/home")
           }}/>
       </div>

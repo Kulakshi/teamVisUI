@@ -9,6 +9,7 @@ import {useYjs} from "../../context/YjsContext";
 import ChartsGrid from "../../components/common/ChartsGrid";
 import ProjectsGrid from "../../components/common/ProjectsGrid";
 import {BASEUSRL} from "../../constants";
+import {useNotification} from "../../context/NotificationContext";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
@@ -19,6 +20,7 @@ const DefaultPage = (props) => {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
     const location = useLocation()
+    const {showNotification} = useNotification()
 
     useEffect(() => {
         const loadUsers = async () => {
@@ -80,8 +82,10 @@ const DefaultPage = (props) => {
         setSelectedUser(inputValue.value)
     };
     const addUser = async () => {
-        const response = await axios.post(`${BASEUSRL}dashboard/add_user`,
-            {userId: selectedUser, ownerId: user, projectId: location.state._id});
+        axios.post(`${BASEUSRL}dashboard/add_user`,
+            {userId: selectedUser, ownerId: user, projectId: location.state._id}).then(()=>{
+                showNotification("Successfully added user")
+        });
     };
 
     const collaborators = users.map(pair => pair.label);
