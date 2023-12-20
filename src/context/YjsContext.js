@@ -16,14 +16,29 @@ export const YjsProvider = ({children}) => {
         doc
     );
 
+    const activeUsers = new Set()
+    wsProvider.awareness.on('change', ({ added, updated, removed }) => {
+      // console.log('Users added:', added);
+      // console.log('Users updated:', updated);
+      // console.log('Users removed:', removed);
+      activeUsers.add(...added)
+      console.log('activeUsersd:', activeUsers);
+    });
+
+    const setUerOnline = (userId) =>{
+        wsProvider.awareness.setLocalState({
+         userId: userId
+        });
+    }
+
     wsProvider.on("status", (event) => {
         console.log(event.status); // logs "connected" or "disconnected"
     });
 
     doc.on('update', (update) => {
-        console.log('Received update:', update);
+        console.log('Received update:');
         Y.applyUpdate(doc, update);
-        console.log('Updated:', update);
+        console.log('Updated!!:');
     });
 
     doc.on('error', (error) => {
@@ -42,7 +57,7 @@ export const YjsProvider = ({children}) => {
     }, []);
 
     return (
-        <YjsContext.Provider value={{doc, yarray, ychartsmap}}>
+        <YjsContext.Provider value={{doc, yarray, ychartsmap, setUerOnline}}>
             {children}
         </YjsContext.Provider>
     );

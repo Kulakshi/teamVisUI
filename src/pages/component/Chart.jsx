@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import * as Y from 'yjs';
 import {
     LineChart,
     Line,
@@ -24,26 +25,82 @@ const Chart = ({chart, data}) => {
     const {doc} = useYjs()
     const {showNotification} = useNotification()
 
-    const setYChartsObserver = (chart) => {
+    let ychart;
+    const setYChartsObserver = async (chart) => {
+        if (!ychart) ychart = doc.getMap(chart._id);
         ychart.set(chart._id, {user, chart})
         ychart.observeDeep(() => {
             const update = ychart.get(chart._id)
-            console.log("get", chart._id, update)
             if (update.user !== user) {
                 showNotification(`${update.user} updated ${chart.title} chart`)
+                setHasUpdated(true)
+                setLastUpdated(update.chart)
+            }else{
+                setHasUpdated(false)
             }
-        })
+        });
+    }
+    const mergeUpdates = () => {
+        if (hasUpdated && lastUpdate) {
+            setChart(lastUpdate)
+            setHasUpdated(false)
+        }
+    }
+    const getUpdatedChartOb = () => {
+        return {
+            _id: chart._id,
+            userId: user,
+            projectId: chart.projectId,
+            title: chart.title || newTitle,
+            x,
+            y,
+            chartType,
+            isLocked,
+            isOwner: location.state.ownerId === user
+        };
+    }
+    const setYMap = () => {
+        console.log("setYMap called")
+        const updatedChart = getUpdatedChartOb()
+        if (updatedChart && updatedChart._id) {
+            if (!ychart) {
+                setYChartsObserver(updatedChart);
+            } else {
+                ychart.set(updatedChart._id, {user, chart: updatedChart});
+            }
+        }
+        showNotification("Chart saved successfully")
     }
 
-    let ychart;
     useEffect(() => {
         if (chart._id) {
             ychart = doc.getMap(chart._id);
-            if (ychart && chart) {
+            if (chart) {
                 setYChartsObserver(chart)
             }
         }
     }, [chart]);
+
+
+    const setChart = async (newChart) => {
+
+        setNewTitle(newChart.title)
+        setX(newChart.x)
+        setY(newChart.y)
+        setIsLocked(newChart.isLocked)
+        setChartType(newChart.chartType)
+    }
+    const fetchChart = async () => {
+        try {
+            const response = await axios.get(`${BASEUSRL}dashboard/get_chart`,
+                {params: {chartId: chart._id}});
+            let newChart = response.data?.chart
+            setChart(newChart)
+        } catch (error) {
+            console.error('Error fetching CSV files:', error);
+        }
+    };
+
 
     const location = useLocation()
     const columns = Object.keys(data[0])
@@ -54,31 +111,25 @@ const Chart = ({chart, data}) => {
     const [y, setY] = useState(chart.y)
     const [isLocked, setIsLocked] = useState(chart.isLocked)
     const [chartType, setChartType] = useState(chart.chartType)
+    const [hasUpdated, setHasUpdated] = useState(false)
+    const [lastUpdate, setLastUpdated] = useState(null)
 
     const handleSubmit = async () => {
-
-        const formData = {
-            userId: user,
-            projectId: chart.projectId,
-            title: chart.title || newTitle,
-            x,
-            y,
-            chartType,
-            isLocked,
-            isOwner: location.state.ownerId === user
-        };
+        const formData = getUpdatedChartOb()
         try {
             axios.post(`${BASEUSRL}dashboard/save_chart`, formData).then(
                 (response) => {
                     const updatedChart = response.data.chart
                     if (updatedChart && updatedChart._id) {
-                        if (!ychart) setYChartsObserver(updatedChart);
-                        ychart.set(updatedChart._id, {user, updatedChart});
+                        if (!ychart) {
+                            setYChartsObserver(updatedChart);
+                        } else {
+                            ychart.set(updatedChart._id, {user, chart: updatedChart});
+                        }
                     }
+                    showNotification("Chart saved successfully")
                 }
             )
-
-
         } catch (error) {
             console.error('Error uploading file:', error);
         }
@@ -132,7 +183,10 @@ const Chart = ({chart, data}) => {
                             <div className="gap-3 flex flex-row justify-between">
                                 <div className="flex flex-row gap-2 w-1/2">
                                     <p className="font-bold">x:</p> <select value={x}
-                                                                            onChange={(e) => setX(e.target.value)}>
+                                                                            onChange={(e) => {
+                                                                                setX(e.target.value)
+                                                                                setYMap()
+                                                                            }}>
                                     {columns && columns.map((val) => {
                                         return <option value={val} key={val}>{val}</option>
                                     })}
@@ -142,7 +196,10 @@ const Chart = ({chart, data}) => {
                                 <div className="flex flex-row gap-2  w-1/2">
 
                                     <p className="font-bold">y:</p> <select value={y}
-                                                                            onChange={(e) => setY(e.target.value)}>
+                                                                            onChange={(e) => {
+                                                                                setY(e.target.value)
+                                                                                setYMap()
+                                                                            }}>
                                     {columns && columns.map((val) => {
                                             return <option value={val} key={val}>{val}</option>
                                         }
@@ -153,7 +210,10 @@ const Chart = ({chart, data}) => {
                             </div>
                             <div className="flex flex-row gap-2 mt-1">
                                 <p className="font-bold">Chart type:</p> <select value={chartType}
-                                                                                 onChange={(e) => setChartType(e.target.value)}>
+                                                                                 onChange={(e) => {
+                                                                                     setChartType(e.target.value)
+                                                                                     setYMap()
+                                                                                 }}>
                                 {chartTypes && chartTypes.map((val) => {
                                     return <option value={val} key={val}>{val}</option>
                                 })}
@@ -201,12 +261,26 @@ const Chart = ({chart, data}) => {
                 </ResponsiveContainer>
             }
 
+            {/*{*/}
+            {/*    // isLocked && user != chart.ownerId && user != project.ownerId?*/}
+            {/*    hasUpdated &&*/}
+            {/*    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={mergeUpdates}>Merge Updates*/}
+            {/*    </button>*/}
+
+            {/*}*/}
+
+            {
+                <button className="border border-gray-600 p-2 mt-5 rounded" onClick={fetchChart}>Load from DB
+                </button>
+
+            }
+
             {
                 // isLocked && user != chart.ownerId && user != project.ownerId?
                 isLocked && user != chart.ownerId ?
                     <div></div>
                     :
-                    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={handleSubmit}>Save</button>
+                    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={handleSubmit}>Save to DB</button>
 
             }
 

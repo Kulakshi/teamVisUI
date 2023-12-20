@@ -5,7 +5,6 @@ import {useLocation, useNavigate} from "react-router-dom";
 import Chart from "../../pages/component/Chart";
 
 const ChartsGrid = ({ numRows, numCols, charts, csvContent }) => {
-  console.log("====",numCols, numRows, charts)
   return (
     <div className={`grid grid-cols-${numCols} gap-10 w-full`}>
       {Array.from({ length: numRows }, (_, rowIndex) => (

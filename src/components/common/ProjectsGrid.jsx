@@ -4,7 +4,6 @@ import {useUser} from "../../context/UserContext";
 import {useNavigate} from "react-router-dom";
 
 const ProjectsGrid = ({ numRows, numCols, projects }) => {
-  console.log("ProjectsGrid ====",numCols, numRows, projects)
   const {user} = useUser();
   const nav = useNavigate()
   return (

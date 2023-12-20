@@ -12,13 +12,15 @@ import {BASEUSRL} from "../../constants";
 
 const DefaultPage = (props) => {
     const {user} = useUser()
-    const {yarray} = useYjs()
+    const {yarray, setUerOnline} = useYjs()
     const [newChart, setNewChart] = useState(null);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const [charts, setCharts] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
     const location = useLocation()
+
+    setUerOnline(user)
 
     useEffect(() => {
         console.log(location.state)
