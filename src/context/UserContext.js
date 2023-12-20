@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
         const cachedUserId = localStorage.getItem('user');
         if (cachedUserId) {
             setUser(cachedUserId);
-            setUerOnline(cachedUserId)
+            // setUerOnline(cachedUserId)
         }
     }, []);
 

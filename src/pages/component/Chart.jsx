@@ -34,7 +34,7 @@ const Chart = ({chart, data}) => {
             ychart = doc.getMap(chart._id);
             ychart.set(chart._id, {user, chart})
         }
-        ychart.observeDeep(() => {
+        ychart.observeDeep((e) => {
             const update = ychart.get(chart._id)
             if (update.user !== user) {
                 // showNotification(`${update.user} updated ${chart.title} chart`)
@@ -44,6 +44,8 @@ const Chart = ({chart, data}) => {
                 }, 3000);
                 setHasUpdated(true)
                 setLastUpdated(update.chart)
+                setChart(update.chart)
+                console.log("update====",e.remote, e.changes)
             } else {
                 setHasUpdated(false)
             }
@@ -165,7 +167,7 @@ const Chart = ({chart, data}) => {
 
             </div>
             <hr/>
-            { notifs &&
+            {notifs &&
                 <div className="flex flex-row gap-2 items-center">
                     <div className="h-3 w-3 rounded bg-green-600"/>
                     <p className="text-green-600">{notifs}</p>
@@ -227,14 +229,21 @@ const Chart = ({chart, data}) => {
                                     })}
                                 </select>
                                 </div>
-                                {
-                                    user === chart.ownerId &&  <FormControlLabel className="w-1/3"
-                                                  control={<Checkbox checked={isLocked} disabled={user != chart.ownerId}
-                                                                     onChange={(e) => {
-                                                                         setIsLocked(e.target.checked)
-                                                                     }}/>}
-                                                  label={isLocked ? 'locked' : 'unlocked'}
-                                />
+                                {chart._id &&
+                                    <div className="gap-2">
+                                        {
+                                            // user == chart.ownerId || user == project.ownerId?
+                                            user == chart.ownerId &&
+                                            <FormControlLabel
+                                                control={<Checkbox checked={isLocked} disabled={user != chart.ownerId}
+                                                                   onChange={(e) => {
+                                                                       setIsLocked(e.target.checked)
+                                                                   }}/>}
+                                                label={isLocked ? 'locked' : 'unlocked'}
+                                            />
+                                        }
+
+                                    </div>
                                 }
 
 
@@ -284,20 +293,21 @@ const Chart = ({chart, data}) => {
 
             <div className="flex flex-row gap-2">
 
-            {
-                <button className="border border-gray-600 p-2 mt-5 rounded w-1/2" onClick={fetchChart}> Refresh
-                </button>
+                {
+                    <button className="border border-gray-600 p-2 mt-5 rounded w-1/2" onClick={fetchChart}> Refresh
+                    </button>
 
-            }
+                }
 
-            {
-                // isLocked && user != chart.ownerId && user != project.ownerId?
-                isLocked && user != chart.ownerId ?
-                    <div></div>
-                    :
-                    <button className="border border-gray-600 p-2 mt-5 rounded  w-1/2" onClick={handleSubmit}>Save Changes</button>
+                {
+                    // isLocked && user != chart.ownerId && user != project.ownerId?
+                    isLocked && user != chart.ownerId ?
+                        <div></div>
+                        :
+                        <button className="border border-gray-600 p-2 mt-5 rounded  w-1/2" onClick={handleSubmit}>Save
+                            Changes</button>
 
-            }
+                }
             </div>
 
         </div>
