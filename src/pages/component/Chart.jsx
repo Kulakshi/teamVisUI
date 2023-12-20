@@ -132,6 +132,9 @@ const Chart = ({chart, data}) => {
             )
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            //reload page
+            window.location.reload();
         }
     };
 

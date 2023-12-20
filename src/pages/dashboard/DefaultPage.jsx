@@ -38,7 +38,7 @@ const DefaultPage = (props) => {
                     setUsers(options);
                 });
             } catch (error) {
-                console.error('Error fetching CSV files:', error);
+                console.error('Error loading users:', error);
             }
         };
 
@@ -60,14 +60,14 @@ const DefaultPage = (props) => {
                 console.log("Charts = ", response.data?.charts)
                 setCharts(response.data?.charts);
             } catch (error) {
-                console.error('Error fetching CSV files:', error);
+                console.error('Error fetching charts:', error);
             }
         };
 
         fetchCsvFile();
         fetchCharts();
         loadUsers();
-    }, [location]);
+    }, [user,location]);
 
     const handleSearch = async (inputValue, callback) => {
         setSelectedUser(inputValue.value)
@@ -138,7 +138,12 @@ const collaborators = users.map(pair => pair.label);
 
             {
                 selectedFileContent &&  charts  &&
-                <ChartsGrid numRows={charts.length > 2 ? charts.length/2 : charts.length} numCols={charts.length > 2 ? 2 : charts.length} charts={charts} csvContent={selectedFileContent.csvContent}/>
+                    <ChartsGrid
+                    numRows={charts && charts.length > 2 ? Math.ceil(charts.length / 2) : 1}
+                    numCols={charts && charts.length > 2 ? 2 : charts.length}
+                    charts={charts}
+                    csvContent={selectedFileContent?.csvContent}
+                    />
 
             }
             </div>

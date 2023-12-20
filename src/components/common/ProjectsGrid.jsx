@@ -9,7 +9,7 @@ const ProjectsGrid = ({ numRows, numCols, projects }) => {
   return (
     <div className={`grid grid-cols-${numCols} gap-10`}>
       {Array.from({ length: numRows }, (_, rowIndex) => (
-        <div key={rowIndex} className="flex gap-10">
+        <div key={rowIndex} className="flex ">
           {Array.from({ length: numCols }, (_, colIndex) => {
             const dataIndex = rowIndex * numCols + colIndex;
             const cellData = projects[dataIndex];
