@@ -25,7 +25,7 @@ const DefaultPage = (props) => {
             try {
                 axios.get(`${BASEUSRL}users/all/${user}`).then((response) => {
                     const options = response.data?.users.map((item) => {
-                       return  {
+                        return {
                             value: item._id,
                             label: item.username
                         }
@@ -40,7 +40,7 @@ const DefaultPage = (props) => {
         const fetchCsvFile = async () => {
             try {
                 const response = await axios.get(`${BASEUSRL}dashboard/get_file`,
-                    {params: {userId: user, fileId: location.state._id, isOwner:location.state.ownerId===user}});
+                    {params: {userId: user, fileId: location.state._id, isOwner: location.state.ownerId === user}});
                 setSelectedFileContent(response.data?.csvFiles);
             } catch (error) {
                 console.error('Error fetching CSV files:', error);
@@ -51,7 +51,7 @@ const DefaultPage = (props) => {
         const fetchCharts = async () => {
             try {
                 const response = await axios.get(`${BASEUSRL}dashboard/get_charts`,
-                    {params: {userId: user, projectId: location.state._id, isOwner:location.state.ownerId===user}});
+                    {params: {userId: user, projectId: location.state._id, isOwner: location.state.ownerId === user}});
                 setCharts(response.data?.charts);
             } catch (error) {
                 console.error('Error fetching charts:', error);
@@ -61,8 +61,8 @@ const DefaultPage = (props) => {
         const fetchProject = async () => {
             try {
                 const response = await axios.get(`${BASEUSRL}dashboard/get_project_users`,
-                    {params: { projectId: location.state._id}});
-                setProjectUsers(response.data?.users?.map((user)=>{
+                    {params: {projectId: location.state._id}});
+                setProjectUsers(response.data?.users?.map((user) => {
                     return user.username
                 }));
             } catch (error) {
@@ -74,26 +74,21 @@ const DefaultPage = (props) => {
         fetchCharts();
         loadUsers();
         fetchProject();
-    }, [user,location]);
+    }, [user, location]);
 
     const handleSearch = async (inputValue, callback) => {
         setSelectedUser(inputValue.value)
     };
     const addUser = async () => {
         const response = await axios.post(`${BASEUSRL}dashboard/add_user`,
-                    {userId:selectedUser, ownerId:user, projectId:location.state._id});
+            {userId: selectedUser, ownerId: user, projectId: location.state._id});
     };
 
-const collaborators = users.map(pair => pair.label);
+    const collaborators = users.map(pair => pair.label);
     return (
         <div className="flex flex-1 flex-col ">
             <div>
                 <div className="flex flex-row gap-4 items-center w-full">
-                    <p>
-                        {
-                            // yarray && yarray.join("-")
-                        }
-                    </p>
                     <Select
                         className="w-52"
                         options={users}
@@ -104,17 +99,20 @@ const collaborators = users.map(pair => pair.label);
                     <button className="border border-gray-600 p-2 rounded" onClick={addUser}>
                         Add user
                     </button>
-                    <div className="right-0 flex flex-row"><p className="font-bold">Dashboard owner:</p> {location.state.ownerId}</div>
-                    <div className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {projectUsers.join(', ')}</div>
+                    <div className="right-0 flex flex-row"><p className="font-bold">Dashboard
+                        owner:</p> {location.state.ownerId}</div>
+                    <div className="right-0 flex flex-row"><p
+                        className="font-bold">Collaborators:</p> {projectUsers.join(', ')}</div>
                 </div>
-                <table className="bg-white p-2 pt-4">
-                    {
-                        selectedFileContent &&
-                        selectedFileContent?.csvContent.map((row, i) => {
-                            if (i > 10) {
-                                return null
-                            }
-                            return <tbody key={i}>
+                <div className="bg-white p-2 my-4 h-80 overflow-y-scroll">
+                    <table>
+                        {
+                            selectedFileContent &&
+                            selectedFileContent?.csvContent.map((row, i) => {
+                                // if (i > 10) {
+                                //     return null
+                                // }
+                                return <tbody key={i}>
                                 {i == 0 && <tr className="border border-gray-300 border-1 p-1" key={i}>
                                     {Object.keys(row).map((val) => {
                                         return <th className="p-2" key={val}>{val}</th>
@@ -123,28 +121,29 @@ const collaborators = users.map(pair => pair.label);
                                 }
                                 <tr className="border border-gray-300 border-1 p-1">
                                     {Object.keys(row).map((val) => {
-                                        return <td className="p-2"  key={val}>{row[val]}</td>
+                                        return <td className="p-2" key={val}>{row[val]}</td>
                                     })}
                                 </tr>
-                            </tbody>
-                        })
-                    }
-                </table>
+                                </tbody>
+                            })
+                        }
+                    </table>
+                </div>
             </div>
             <div className="flex w-500 h-500 border-1  border-gray-600 bg-yellow w-full">
 
-            {
-                selectedFileContent &&  charts  &&
+                {
+                    selectedFileContent && charts &&
                     <ChartsGrid
-                    numRows={charts && charts.length > 2 ? Math.ceil(charts.length / 2) : 1}
-                    numCols={charts && charts.length > 2 ? 2 : charts.length}
-                    charts={charts}
-                    csvContent={selectedFileContent?.csvContent}
+                        numRows={charts && charts.length > 2 ? Math.ceil(charts.length / 2) : 1}
+                        numCols={charts && charts.length > 2 ? 2 : charts.length}
+                        charts={charts}
+                        csvContent={selectedFileContent?.csvContent}
                     />
 
-            }
+                }
             </div>
-            <button className="border border-gray-600 p-2 rounded w-52" onClick={ () => {
+            <button className="border border-gray-600 p-2 rounded w-52" onClick={() => {
                 setNewChart(true)
             }}>
                 Add New Chart

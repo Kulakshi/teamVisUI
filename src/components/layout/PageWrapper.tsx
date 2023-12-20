@@ -17,7 +17,7 @@ const PageWrapper = (props: Props) => {
   }, [dispatch, props]);
 
   return (
-    <div className="bg-gray-200 w-full h-screen mx-52 px-20 py-10 overflow-auto mt-10">
+    <div className="bg-gray-200 w-screen h-screen px-20 py-10 overflow-auto mt-10">
       {props.children}
     </div>
   );
