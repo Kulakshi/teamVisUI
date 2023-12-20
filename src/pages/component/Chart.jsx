@@ -38,7 +38,7 @@ const Chart = ({chart, data}) => {
             const update = ychart.get(chart._id)
             if (update.user !== user) {
                 // showNotification(`${update.user} updated ${chart.title} chart`)
-                setNotifs(`${update.user} updated this chart`)
+                setNotifs(`${update.user} is working on this chart`)
                 setTimeout(() => {
                     setNotifs(null)
                 }, 3000);
@@ -227,14 +227,17 @@ const Chart = ({chart, data}) => {
                                     })}
                                 </select>
                                 </div>
-
-                                <FormControlLabel className="w-1/3"
+                                {
+                                    user === chart.ownerId &&  <FormControlLabel className="w-1/3"
                                                   control={<Checkbox checked={isLocked} disabled={user != chart.ownerId}
                                                                      onChange={(e) => {
                                                                          setIsLocked(e.target.checked)
                                                                      }}/>}
                                                   label={isLocked ? 'locked' : 'unlocked'}
                                 />
+                                }
+
+
                             </div>
 
                         </div>
@@ -279,16 +282,10 @@ const Chart = ({chart, data}) => {
                 </ResponsiveContainer>
             }
 
-            {
-                // isLocked && user != chart.ownerId && user != project.ownerId?
-                hasUpdated &&
-                <button className="border border-gray-600 p-2 mt-5 rounded" onClick={mergeUpdates}>Merge Updates
-                </button>
-
-            }
+            <div className="flex flex-row gap-2">
 
             {
-                <button className="border border-gray-600 p-2 mt-5 rounded" onClick={fetchChart}>Load from DB
+                <button className="border border-gray-600 p-2 mt-5 rounded w-1/2" onClick={fetchChart}> Refresh
                 </button>
 
             }
@@ -298,10 +295,10 @@ const Chart = ({chart, data}) => {
                 isLocked && user != chart.ownerId ?
                     <div></div>
                     :
-                    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={handleSubmit}>Save to
-                        DB</button>
+                    <button className="border border-gray-600 p-2 mt-5 rounded  w-1/2" onClick={handleSubmit}>Save Changes</button>
 
             }
+            </div>
 
         </div>
     );
