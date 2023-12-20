@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import * as Y from 'yjs';
+import 'react-tooltip/dist/react-tooltip.css'
+import {Tooltip as ReactTooltip} from 'react-tooltip'
 import {
     LineChart,
     Line,
@@ -19,10 +20,12 @@ import {useLocation} from "react-router-dom";
 import {useYjs} from "../../context/YjsContext";
 import {BASEUSRL} from "../../constants";
 import {useNotification} from "../../context/NotificationContext";
+import {InfoOutlined} from "@mui/icons-material";
 
 const Chart = ({chart, data}) => {
     const {user} = useUser()
     const {doc} = useYjs()
+    const [notifs, setNotifs] = useState(null)
     const {showNotification} = useNotification()
 
     let ychart;
@@ -34,10 +37,14 @@ const Chart = ({chart, data}) => {
         ychart.observeDeep(() => {
             const update = ychart.get(chart._id)
             if (update.user !== user) {
-                showNotification(`${update.user} updated ${chart.title} chart`)
+                // showNotification(`${update.user} updated ${chart.title} chart`)
+                setNotifs(`${update.user} updated this chart`)
+                setTimeout(() => {
+                    setNotifs(null)
+                }, 3000);
                 setHasUpdated(true)
                 setLastUpdated(update.chart)
-            }else{
+            } else {
                 setHasUpdated(false)
             }
         });
@@ -146,27 +153,25 @@ const Chart = ({chart, data}) => {
                         :
                         <div> Title: <input type="text" onChange={(e) => setNewTitle(e.target.value)}/></div>
                     }
-                    <div className="flex flex-row"><p className="font-bold">Chart Owner: </p>{chart.ownerId}</div>
+                    <div>
+                        <a data-tooltip-id="chartdetails" data-tooltip-content={
+                            `Chart Owner: ${chart.ownerId}`
+                        }>
+                            <InfoOutlined/>
+                        </a>
+                        <ReactTooltip id="chartdetails"/>
+                    </div>
                 </div>
 
-                {chart._id &&
-                    <div className="gap-2">
-                        {
-                            // user == chart.ownerId || user == project.ownerId?
-                            user == chart.ownerId &&
-                            <FormControlLabel
-                                control={<Checkbox checked={isLocked} disabled={user != chart.ownerId}
-                                                   onChange={(e) => {
-                                                       setIsLocked(e.target.checked)
-                                                   }}/>}
-                                label={isLocked ? 'locked' : 'unlocked'}
-                            />
-                        }
-
-                    </div>
-                }
-
             </div>
+            <hr/>
+            { notifs &&
+                <div className="flex flex-row gap-2 items-center">
+                    <div className="h-3 w-3 rounded bg-green-600"/>
+                    <p className="text-green-600">{notifs}</p>
+                </div>
+            }
+
             <hr/>
             <div className="gap-2 flex flex-row my-2">
                 {
@@ -207,18 +212,31 @@ const Chart = ({chart, data}) => {
                                 </select>
                                 </div>
 
+
                             </div>
                             <div className="flex flex-row gap-2 mt-1">
-                                <p className="font-bold">Chart type:</p> <select value={chartType}
-                                                                                 onChange={(e) => {
-                                                                                     setChartType(e.target.value)
-                                                                                     setYMap()
-                                                                                 }}>
-                                {chartTypes && chartTypes.map((val) => {
-                                    return <option value={val} key={val}>{val}</option>
-                                })}
-                            </select>
+                                <div className="w-2/3 flex flex-row">
+
+                                    <p className="font-bold">Chart type:</p> <select value={chartType}
+                                                                                     onChange={(e) => {
+                                                                                         setChartType(e.target.value)
+                                                                                         setYMap()
+                                                                                     }}>
+                                    {chartTypes && chartTypes.map((val) => {
+                                        return <option value={val} key={val}>{val}</option>
+                                    })}
+                                </select>
+                                </div>
+
+                                <FormControlLabel className="w-1/3"
+                                                  control={<Checkbox checked={isLocked} disabled={user != chart.ownerId}
+                                                                     onChange={(e) => {
+                                                                         setIsLocked(e.target.checked)
+                                                                     }}/>}
+                                                  label={isLocked ? 'locked' : 'unlocked'}
+                                />
                             </div>
+
                         </div>
 
                 }
@@ -280,7 +298,8 @@ const Chart = ({chart, data}) => {
                 isLocked && user != chart.ownerId ?
                     <div></div>
                     :
-                    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={handleSubmit}>Save to DB</button>
+                    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={handleSubmit}>Save to
+                        DB</button>
 
             }
 

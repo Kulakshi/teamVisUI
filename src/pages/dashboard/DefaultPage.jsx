@@ -109,9 +109,6 @@ const DefaultPage = (props) => {
                         {
                             selectedFileContent &&
                             selectedFileContent?.csvContent.map((row, i) => {
-                                // if (i > 10) {
-                                //     return null
-                                // }
                                 return <tbody key={i}>
                                 {i == 0 && <tr className="border border-gray-300 border-1 p-1" key={i}>
                                     {Object.keys(row).map((val) => {

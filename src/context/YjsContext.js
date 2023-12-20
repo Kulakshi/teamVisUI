@@ -16,6 +16,12 @@ export const YjsProvider = ({children}) => {
         doc
     );
 
+    setInterval(() => {
+      if (!wsProvider.wsconnected) {
+          wsProvider.connect()
+      }
+    }, 5000);
+
     const activeUsers = new Set()
     wsProvider.awareness.on('change', changes => {
         const users = wsProvider.awareness.getStates()
