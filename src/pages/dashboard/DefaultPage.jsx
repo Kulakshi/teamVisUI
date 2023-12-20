@@ -36,7 +36,7 @@ const DefaultPage = (props) => {
                     setUsers(options);
                 });
             } catch (error) {
-                console.error('Error fetching CSV files:', error);
+                console.error('Error loading users:', error);
             }
         };
 
@@ -58,14 +58,14 @@ const DefaultPage = (props) => {
                 console.log("Charts = ", response.data?.charts)
                 setCharts(response.data?.charts);
             } catch (error) {
-                console.error('Error fetching CSV files:', error);
+                console.error('Error fetching charts:', error);
             }
         };
 
         fetchCsvFile();
         fetchCharts();
         loadUsers();
-    }, [location]);
+    }, [user,location]);
 
     const handleSearch = async (inputValue, callback) => {
         setSelectedUser(inputValue.value)

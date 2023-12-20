@@ -28,8 +28,10 @@ const HomePage = () => {
         };
 
     useEffect(() => {
-        fetchCsvFiles();
-    }, [user]);
+        if (user) {
+            fetchCsvFiles();
+        }
+        }, [user]);
 
     const handleFileChange = (e) => {
         setCsvFile(e.target.files[0]);
