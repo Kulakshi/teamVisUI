@@ -27,8 +27,10 @@ const Chart = ({chart, data}) => {
 
     let ychart;
     const setYChartsObserver = async (chart) => {
-        if (!ychart) ychart = doc.getMap(chart._id);
-        ychart.set(chart._id, {user, chart})
+        if (!ychart) {
+            ychart = doc.getMap(chart._id);
+            ychart.set(chart._id, {user, chart})
+        }
         ychart.observeDeep(() => {
             const update = ychart.get(chart._id)
             if (update.user !== user) {
@@ -69,21 +71,16 @@ const Chart = ({chart, data}) => {
                 ychart.set(updatedChart._id, {user, chart: updatedChart});
             }
         }
-        showNotification("Chart saved successfully")
     }
 
     useEffect(() => {
         if (chart._id) {
-            ychart = doc.getMap(chart._id);
-            if (chart) {
-                setYChartsObserver(chart)
-            }
+            setYChartsObserver(chart)
         }
-    }, [chart]);
+    }, []);
 
 
     const setChart = async (newChart) => {
-
         setNewTitle(newChart.title)
         setX(newChart.x)
         setY(newChart.y)
@@ -264,13 +261,13 @@ const Chart = ({chart, data}) => {
                 </ResponsiveContainer>
             }
 
-            {/*{*/}
-            {/*    // isLocked && user != chart.ownerId && user != project.ownerId?*/}
-            {/*    hasUpdated &&*/}
-            {/*    <button className="border border-gray-600 p-2 mt-5 rounded" onClick={mergeUpdates}>Merge Updates*/}
-            {/*    </button>*/}
+            {
+                // isLocked && user != chart.ownerId && user != project.ownerId?
+                hasUpdated &&
+                <button className="border border-gray-600 p-2 mt-5 rounded" onClick={mergeUpdates}>Merge Updates
+                </button>
 
-            {/*}*/}
+            }
 
             {
                 <button className="border border-gray-600 p-2 mt-5 rounded" onClick={fetchChart}>Load from DB

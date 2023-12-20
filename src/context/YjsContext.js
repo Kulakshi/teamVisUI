@@ -20,6 +20,7 @@ export const YjsProvider = ({children}) => {
     wsProvider.awareness.on('change', changes => {
         const users = wsProvider.awareness.getStates()
         users.forEach((item) => {
+                console.log("!=",item.value)
                 if (item.value) {
                     activeUsers.add(item.value?.userId)
                 }
@@ -29,9 +30,11 @@ export const YjsProvider = ({children}) => {
     });
 
     const setUerOnline = (userId) =>{
-        wsProvider.awareness.setLocalState({
-            userId: userId
-        });
+        if(userId){
+            wsProvider.awareness.setLocalState({
+                userId: userId
+            });
+        }
     }
 
     wsProvider.on("status", (event) => {

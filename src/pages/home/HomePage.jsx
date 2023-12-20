@@ -7,7 +7,6 @@ import {BASEUSRL} from "../../constants";
 
 const HomePage = () => {
     const {user} = useUser();
-    console.log(user)
     const [newProject, setNewProject] = useState(false);
     const [projectName, setProjectName] = useState('');
     const [csvFile, setCsvFile] = useState(null);

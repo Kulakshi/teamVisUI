@@ -15,6 +15,7 @@ const DefaultPage = (props) => {
     const [newChart, setNewChart] = useState(null);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const [charts, setCharts] = useState([]);
+    const [projectUsers, setProjectUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
     const location = useLocation()
@@ -57,9 +58,22 @@ const DefaultPage = (props) => {
             }
         };
 
+        const fetchProject = async () => {
+            try {
+                const response = await axios.get(`${BASEUSRL}dashboard/get_project_users`,
+                    {params: { projectId: location.state._id}});
+                setProjectUsers(response.data?.users?.map((user)=>{
+                    return user.username
+                }));
+            } catch (error) {
+                console.error('Error fetching charts:', error);
+            }
+        };
+
         fetchCsvFile();
         fetchCharts();
         loadUsers();
+        fetchProject();
     }, [user,location]);
 
     const handleSearch = async (inputValue, callback) => {
@@ -91,7 +105,7 @@ const collaborators = users.map(pair => pair.label);
                         Add user
                     </button>
                     <div className="right-0 flex flex-row"><p className="font-bold">Dashboard owner:</p> {location.state.ownerId}</div>
-                    <div className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {collaborators.join(', ')}</div>
+                    <div className="right-0 flex flex-row"><p className="font-bold">Collaborators:</p> {projectUsers.join(', ')}</div>
                 </div>
                 <table className="bg-white p-2 pt-4">
                     {
